@@ -2,11 +2,11 @@
 
 namespace VendorName\Skeleton\Tests;
 
+use Filament\FilamentServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use VendorName\Skeleton\SkeletonServiceProvider;
-use Filament\FilamentServiceProvider;
-use Livewire\LivewireServiceProvider;
 
 class TestCase extends Orchestra
 {

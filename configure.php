@@ -29,7 +29,6 @@ $className = ask('Class name', $className);
 $description = ask('Package description', "This is my package {$packageSlug}");
 
 $usePhpStan = confirm('Enable PhpStan?', true);
-$usePhpCsFixer = confirm('Enable PhpCsFixer?', true);
 $usePint = confirm('Enable Pint?', true);
 $useUpdateChangelogWorkflow = confirm('Use automatic changelog updater workflow?', true);
 
@@ -81,11 +80,6 @@ foreach ($files as $file) {
         str_contains($file, 'README.md') => remove_readme_paragraphs($file),
         default => [],
     };
-}
-
-if (! $usePhpCsFixer) {
-    safeUnlink(__DIR__ . '/.php_cs.dist.php');
-    safeUnlink(__DIR__ . '/.github/workflows/php-cs-fixer.yml');
 }
 
 if (! $usePint) {

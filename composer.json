@@ -48,9 +48,9 @@
         }
     },
     "scripts": {
-        "pint": "pint",
-        "test:pest": "pest --parallel",
-        "test:phpstan": "phpstan analyse",
+        "pint": "vendor/bin/pint",
+        "test:pest": "vendor/bin/pest --parallel",
+        "test:phpstan": "vendor/bin/phpstan analyse",
         "test": [
             "@test:pest",
             "@test:phpstan"

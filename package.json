@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "dev:css": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/skeleton.css --postcss --watch",
+        "dev:styles": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/skeleton.css --postcss --watch",
         "dev:js": "esbuild resources/js/plugin.js --bundle --sourcemap=inline --outfile=resources/dist/skeleton.js --watch",
         "build:css": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/skeleton.css --postcss --minify",
         "build:js": "esbuild resources/js/plugin.js --bundle --minify --outfile=resources/dist/skeleton.js",

@@ -3,9 +3,9 @@
     "scripts": {
         "dev:styles": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/skeleton.css --postcss --watch",
         "dev:scripts": "esbuild resources/js/plugin.js --bundle --sourcemap=inline --outfile=resources/dist/skeleton.js --watch",
-        "build:styles": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/skeleton.css --postcss --minify",
+        "build:styles": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/skeleton.css --postcss --minify && npm run purge",
         "build:scripts": "esbuild resources/js/plugin.js --bundle --minify --outfile=resources/dist/skeleton.js",
-        "build:purge": "filament-purge -i resources/dist/skeleton.css -o resources/dist/skeleton.css",
+        "purge": "filament-purge -i resources/dist/skeleton.css -o resources/dist/skeleton.css",
         "dev": "npm-run-all --parallel dev:*",
         "build": "npm-run-all build:*"
     },

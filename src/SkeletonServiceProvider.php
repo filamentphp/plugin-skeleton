@@ -22,15 +22,15 @@ class SkeletonServiceProvider extends PluginServiceProvider
     ];
 
     protected array $styles = [
-        'plugin-skeleton' => __DIR__ . '/../dist/skeleton.css',
+        'plugin-skeleton' => __DIR__ . '/../resources/dist/skeleton.css',
     ];
 
     protected array $scripts = [
-        'plugin-skeleton' => __DIR__ . '/../dist/skeleton.js',
+        'plugin-skeleton' => __DIR__ . '/../resources/dist/skeleton.js',
     ];
 
     // protected array $beforeCoreScripts = [
-    //     'plugin-skeleton' => __DIR__ . '/../dist/skeleton.js',
+    //     'plugin-skeleton' => __DIR__ . '/../resources/dist/skeleton.js',
     // ];
 
     public function configurePackage(Package $package): void

@@ -40,7 +40,6 @@ writeln("Namespace  : {$vendorNamespace}\\{$className}");
 writeln("Class name : {$className}");
 writeln('---');
 writeln('Packages & Utilities');
-writeln('Use PhpCsFixer       : ' . ($usePhpCsFixer ? 'yes' : 'no'));
 writeln('Use Larastan/PhpStan : ' . ($usePhpStan ? 'yes' : 'no'));
 writeln('Use Pint             : ' . ($usePint ? 'yes' : 'no'));
 writeln('Use Auto-Changelog   : ' . ($useUpdateChangelogWorkflow ? 'yes' : 'no'));

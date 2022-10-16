@@ -82,8 +82,7 @@ foreach ($files as $file) {
 }
 
 if (! $usePint) {
-    safeUnlink(__DIR__.'/pint.json');
-    safeUnlink(__DIR__.'/.github/workflows/pint.yml');
+    safeUnlink(__DIR__.'/.github/workflows/fix-php-code-style-issues.yml');
 
     remove_composer_deps([
         'laravel/pint',

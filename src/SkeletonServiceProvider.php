@@ -4,8 +4,8 @@ namespace VendorName\Skeleton;
 
 //use Filament\Support\Assets\Js;
 //use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Asset;
 use Filament\PluginServiceProvider;
+use Filament\Support\Assets\Asset;
 use Spatie\LaravelPackageTools\Package;
 //use Filament\Support\Assets\AlpineComponent;
 use VendorName\Skeleton\Commands\SkeletonCommand;
@@ -48,10 +48,9 @@ class SkeletonServiceProvider extends PluginServiceProvider
     protected function getAssets(): array
     {
         return [
-//             AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
-//             Css::make('echo', __DIR__ . '/../resources/dist/skeleton.js'),
-//             Js::make('echo', __DIR__ . '/../resources/dist/skeleton.js'),
+            //             AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
+            //             Css::make('echo', __DIR__ . '/../resources/dist/skeleton.js'),
+            //             Js::make('echo', __DIR__ . '/../resources/dist/skeleton.js'),
         ];
     }
-
 }

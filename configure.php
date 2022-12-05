@@ -33,9 +33,9 @@ $useDependabot = confirm('Enable Dependabot?', true);
 $useLaravelRay = confirm('Use Ray for debugging?', true);
 $useUpdateChangelogWorkflow = confirm('Use automatic changelog updater workflow?', true);
 
-$isTheme = confirm("Is this a custom theme?");
-$formsOnly = ! $isTheme && confirm("Is this for Forms only?");
-$tablesOnly = ! $formsOnly && confirm("Is this for Tables only?");
+$isTheme = confirm('Is this a custom theme?');
+$formsOnly = ! $isTheme && confirm('Is this for Forms only?');
+$tablesOnly = ! $formsOnly && confirm('Is this for Tables only?');
 
 writeln("\r");
 writeln('------');
@@ -83,7 +83,7 @@ if ($formsOnly) {
     ]);
 } else {
     if ($isTheme) {
-        safeUnlink(__DIR__ . '/src/SkeletonServiceProvider.php');
+        safeUnlink(__DIR__.'/src/SkeletonServiceProvider.php');
         remove_package_script(['purge']);
         remove_package_script(['dev:scripts']);
         remove_package_script(['build:scripts']);
@@ -179,7 +179,7 @@ confirm('Let this script delete itself?', true) && unlink(__FILE__);
 function ask(string $question, string $default = ''): string
 {
     $def = $default ? "\e[0;33m ({$default})" : '';
-    $answer = readline("\e[0;32m" . $question.$def . ": \e[0m");
+    $answer = readline("\e[0;32m".$question.$def.": \e[0m");
 
     if (! $answer) {
         return $default;
@@ -337,7 +337,7 @@ function remove_tag(string $file, string $tag): void
 
     file_put_contents(
         $file,
-        preg_replace('/<!--' . $tag . '-->.*<!--\/' . $tag . '-->/s', '', $contents) ?: $contents
+        preg_replace('/<!--'.$tag.'-->.*<!--\/'.$tag.'-->/s', '', $contents) ?: $contents
     );
 }
 

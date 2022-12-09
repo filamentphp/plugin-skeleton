@@ -2,23 +2,22 @@
 
 namespace VendorName\Skeleton;
 
-use Filament\Facades\Filament;
 use Filament\Context;
-use Filament\PluginServiceProvider;
-use Filament\Support\Assets\AssetManager;
-use Filament\Support\Assets\Js;
-use Filament\Support\Assets\Css;
+use Filament\Facades\Filament;
+use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
+use Filament\Support\Assets\AssetManager;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\Icons\Icon;
 use Filament\Support\Icons\IconManager;
-use Filament\Support\Assets\AlpineComponent;
 use Illuminate\Filesystem\Filesystem;
+use Livewire\Testing\TestableLivewire;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
-use Livewire\Testing\TestableLivewire;
 use VendorName\Skeleton\Commands\SkeletonCommand;
 use VendorName\Skeleton\Testing\TestsSkeleton;
 
@@ -32,7 +31,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     {
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
-            ->hasInstallCommand(function(InstallCommand $command) {
+            ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->publishConfigFile()
                     ->publishMigrations()
@@ -91,7 +90,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
 
 //        Handle Stubs
         if ($this->app->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
+            foreach (app(Filesystem::class)->files(__DIR__.'/../stubs/') as $file) {
                 $this->publishes([
                     $file->getRealPath() => base_path("stubs/skeleton/{$file->getFilename()}"),
                 ], 'forms-stubs');
@@ -114,8 +113,8 @@ class SkeletonServiceProvider extends PackageServiceProvider
     {
         return [
             //  AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
-            Css::make('skeleton-styles', __DIR__ . '/../resources/dist/skeleton.js'),
-            Js::make('skeleton-scripts', __DIR__ . '/../resources/dist/skeleton.js'),
+            Css::make('skeleton-styles', __DIR__.'/../resources/dist/skeleton.js'),
+            Js::make('skeleton-scripts', __DIR__.'/../resources/dist/skeleton.js'),
         ];
     }
 
@@ -125,7 +124,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            SkeletonCommand::class
+            SkeletonCommand::class,
         ];
     }
 
@@ -167,7 +166,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            'create_skeleton_table'
+            'create_skeleton_table',
         ];
     }
 

@@ -83,25 +83,25 @@ if ($formsOnly) {
     ]);
 } else {
     if ($isTheme) {
-        copy(__DIR__ . '/configure-stubs/theme/package.json', __DIR__ . '/package.json');
-        copy(__DIR__ . '/configure-stubs/theme/plugin.css', __DIR__ . '/resources/css/plugin.css');
-        copy(__DIR__ . '/configure-stubs/theme/tailwind.config.js', __DIR__ . '/tailwind.config.js');
-        safeUnlink(__DIR__ . '/src/SkeletonServiceProvider.php');
-        safeUnlink(__DIR__ . '/src/Skeleton.php');
-        removeDirectory(__DIR__ . '/config');
-        removeDirectory(__DIR__ . '/database');
-        removeDirectory(__DIR__ . '/stubs');
-        removeDirectory(__DIR__ . '/resources/js');
-        removeDirectory(__DIR__ . '/resources/lang');
-        removeDirectory(__DIR__ . '/resources/views');
-        removeDirectory(__DIR__ . '/src/Commands');
-        removeDirectory(__DIR__ . '/src/Facades');
-        removeDirectory(__DIR__ . '/src/Testing');
+        copy(__DIR__.'/configure-stubs/theme/package.json', __DIR__.'/package.json');
+        copy(__DIR__.'/configure-stubs/theme/plugin.css', __DIR__.'/resources/css/plugin.css');
+        copy(__DIR__.'/configure-stubs/theme/tailwind.config.js', __DIR__.'/tailwind.config.js');
+        safeUnlink(__DIR__.'/src/SkeletonServiceProvider.php');
+        safeUnlink(__DIR__.'/src/Skeleton.php');
+        removeDirectory(__DIR__.'/config');
+        removeDirectory(__DIR__.'/database');
+        removeDirectory(__DIR__.'/stubs');
+        removeDirectory(__DIR__.'/resources/js');
+        removeDirectory(__DIR__.'/resources/lang');
+        removeDirectory(__DIR__.'/resources/views');
+        removeDirectory(__DIR__.'/src/Commands');
+        removeDirectory(__DIR__.'/src/Facades');
+        removeDirectory(__DIR__.'/src/Testing');
     } else {
-        safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
-        copy(__DIR__ . '/configure-stubs/package/package.json', __DIR__ . '/package.json');
-        copy(__DIR__ . '/configure-stubs/package/plugin.css', __DIR__ . '/resources/css/plugin.css');
-        copy(__DIR__ . '/configure-stubs/package/tailwind.config.js', __DIR__ . '/tailwind.config.js');
+        safeUnlink(__DIR__.'/src/SkeletonTheme.php');
+        copy(__DIR__.'/configure-stubs/package/package.json', __DIR__.'/package.json');
+        copy(__DIR__.'/configure-stubs/package/plugin.css', __DIR__.'/resources/css/plugin.css');
+        copy(__DIR__.'/configure-stubs/package/tailwind.config.js', __DIR__.'/tailwind.config.js');
     }
 
     remove_composer_filament_deps([
@@ -186,7 +186,7 @@ if (! $useUpdateChangelogWorkflow) {
 confirm('Execute `composer install` and run tests?') && run('composer install && composer test');
 
 if (confirm('Let this script delete itself?', true)) {
-    removeDirectory(__DIR__ . '/configure-stubs');
+    removeDirectory(__DIR__.'/configure-stubs');
     unlink(__FILE__);
 }
 
@@ -377,12 +377,17 @@ function replaceForAllOtherOSes(): array
     return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v '.basename(__FILE__)));
 }
 
-function removeDirectory($dir): void {
+function removeDirectory($dir): void
+{
     if (is_dir($dir)) {
         $objects = scandir($dir);
         foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
-                if (filetype($dir."/".$object) == "dir") removeDirectory($dir."/".$object); else unlink($dir."/".$object);
+            if ($object != '.' && $object != '..') {
+                if (filetype($dir.'/'.$object) == 'dir') {
+                    removeDirectory($dir.'/'.$object);
+                } else {
+                    unlink($dir.'/'.$object);
+                }
             }
         }
         rmdir($dir);

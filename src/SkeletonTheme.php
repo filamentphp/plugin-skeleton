@@ -5,6 +5,7 @@ namespace Filament;
 use Filament\Contracts\Plugin;
 use Filament\Support\Assets\Theme;
 use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Color;
 
 class SkeletonTheme implements Plugin
 {
@@ -20,6 +21,15 @@ class SkeletonTheme implements Plugin
         ]);
 
         $context
+            ->font('DM Sans')
+            ->primaryColor(Color::Amber)
+            ->secondaryColor(Color::Gray)
+            ->warningColor(Color::Amber)
+            ->dangerColor(Color::Rose)
+            ->successColor(Color::Green)
+            ->grayColor(Color::Slate)
+            ->sidebarWidth('20rem')
+            ->collapsedSidebarWidth('5.4rem')
             ->theme('skeleton');
     }
 

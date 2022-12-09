@@ -35,7 +35,7 @@ $useUpdateChangelogWorkflow = confirm('Use automatic changelog updater workflow?
 
 $isTheme = confirm('Is this a custom theme?');
 $formsOnly = ! $isTheme && confirm('Is this for Forms only?');
-$tablesOnly = ! $formsOnly && confirm('Is this for Tables only?');
+$tablesOnly = ! ($isTheme || $formsOnly) && confirm('Is this for Tables only?');
 
 writeln("\r");
 writeln('------');
@@ -83,15 +83,23 @@ if ($formsOnly) {
     ]);
 } else {
     if ($isTheme) {
-        safeUnlink(__DIR__.'/src/SkeletonServiceProvider.php');
-        remove_package_script(['purge']);
-        remove_package_script(['dev:scripts']);
-        remove_package_script(['build:scripts']);
-        remove_package_script(['@awcodes/filament-plugin-purge']);
-        remove_package_script(['esbuild']);
-        replace_in_file(__DIR__.'/package.json', [' && npm run purge' => '']);
+        copy(__DIR__ . '/configure-stubs/theme/package.json', __DIR__ . '/package.json');
+        copy(__DIR__ . '/configure-stubs/theme/plugin.css', __DIR__ . '/resources/css/plugin.css');
+        safeUnlink(__DIR__ . '/src/SkeletonServiceProvider.php');
+        safeUnlink(__DIR__ . '/src/Skeleton.php');
+        removeDirectory(__DIR__ . '/config');
+        removeDirectory(__DIR__ . '/database');
+        removeDirectory(__DIR__ . '/stubs');
+        removeDirectory(__DIR__ . '/resources/js');
+        removeDirectory(__DIR__ . '/resources/lang');
+        removeDirectory(__DIR__ . '/resources/views');
+        removeDirectory(__DIR__ . '/src/Commands');
+        removeDirectory(__DIR__ . '/src/Facades');
+        removeDirectory(__DIR__ . '/src/Testing');
     } else {
-        safeUnlink(__DIR__.'/src/SkeletonTheme.php');
+        safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
+        copy(__DIR__ . '/configure-stubs/package/package.json', __DIR__ . '/package.json');
+        copy(__DIR__ . '/configure-stubs/package/plugin.css', __DIR__ . '/resources/css/plugin.css');
     }
 
     remove_composer_filament_deps([
@@ -124,6 +132,7 @@ foreach ($files as $file) {
         str_contains($file, determineSeparator('src/SkeletonTheme.php')) => rename($file, determineSeparator('./src/'.$className.'Theme.php')),
         str_contains($file, determineSeparator('src/Facades/Skeleton.php')) => rename($file, determineSeparator('./src/Facades/'.$className.'.php')),
         str_contains($file, determineSeparator('src/Commands/SkeletonCommand.php')) => rename($file, determineSeparator('./src/Commands/'.$className.'Command.php')),
+        str_contains($file, determineSeparator('src/Testing/TestsSkeleton.php')) => rename($file, determineSeparator('./src/Testing/Tests'.$className.'.php')),
         str_contains($file, determineSeparator('database/migrations/create_skeleton_table.php.stub')) => rename($file, determineSeparator('./database/migrations/create_'.$packageSlugWithoutPrefix.'_table.php.stub')),
         str_contains($file, determineSeparator('config/skeleton.php')) => rename($file, determineSeparator('./config/'.$packageSlugWithoutPrefix.'.php')),
         str_contains($file, 'README.md') => remove_tag($file, 'delete'),
@@ -174,7 +183,10 @@ if (! $useUpdateChangelogWorkflow) {
 
 confirm('Execute `composer install` and run tests?') && run('composer install && composer test');
 
-confirm('Let this script delete itself?', true) && unlink(__FILE__);
+if (confirm('Let this script delete itself?', true)) {
+    removeDirectory(__DIR__ . '/configure-stubs');
+    unlink(__FILE__);
+}
 
 function ask(string $question, string $default = ''): string
 {
@@ -361,4 +373,16 @@ function replaceForWindows(): array
 function replaceForAllOtherOSes(): array
 {
     return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v '.basename(__FILE__)));
+}
+
+function removeDirectory($dir): void {
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (filetype($dir."/".$object) == "dir") removeDirectory($dir."/".$object); else unlink($dir."/".$object);
+            }
+        }
+        rmdir($dir);
+    }
 }

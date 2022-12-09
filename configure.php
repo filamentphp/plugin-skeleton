@@ -85,6 +85,7 @@ if ($formsOnly) {
     if ($isTheme) {
         copy(__DIR__ . '/configure-stubs/theme/package.json', __DIR__ . '/package.json');
         copy(__DIR__ . '/configure-stubs/theme/plugin.css', __DIR__ . '/resources/css/plugin.css');
+        copy(__DIR__ . '/configure-stubs/theme/tailwind.config.js', __DIR__ . '/tailwind.config.js');
         safeUnlink(__DIR__ . '/src/SkeletonServiceProvider.php');
         safeUnlink(__DIR__ . '/src/Skeleton.php');
         removeDirectory(__DIR__ . '/config');
@@ -100,6 +101,7 @@ if ($formsOnly) {
         safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
         copy(__DIR__ . '/configure-stubs/package/package.json', __DIR__ . '/package.json');
         copy(__DIR__ . '/configure-stubs/package/plugin.css', __DIR__ . '/resources/css/plugin.css');
+        copy(__DIR__ . '/configure-stubs/package/tailwind.config.js', __DIR__ . '/tailwind.config.js');
     }
 
     remove_composer_filament_deps([

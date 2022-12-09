@@ -1,8 +1,8 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npx tailwindcss -i config-stubs/theme/plugin.css -o resources/dist/skeleton.css --postcss --watch",
-        "build": "npx tailwindcss -i config-stubs/theme/plugin.css -o resources/dist/skeleton.css --postcss --minify"
+        "dev": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/skeleton.css --postcss --watch",
+        "build": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/skeleton.css --postcss --minify"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.7",

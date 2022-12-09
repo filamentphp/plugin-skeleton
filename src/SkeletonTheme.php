@@ -1,13 +1,14 @@
 <?php
 
-namespace Filament;
+namespace VendorName;
 
+use Filament\Context;
 use Filament\Contracts\Plugin;
+use Filament\Support\Color;
 use Filament\Support\Assets\Theme;
 use Filament\Support\Facades\FilamentAsset;
-use Filament\Support\Color;
 
-class SkeletonTheme implements Plugin
+class Skeleton implements Plugin
 {
     public function getId(): string
     {

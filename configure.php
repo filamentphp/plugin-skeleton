@@ -8,8 +8,10 @@ $gitEmail = run('git config user.email');
 $authorEmail = ask('Author email', $gitEmail);
 
 $usernameGuess = explode(':', run('git config remote.origin.url'))[1];
-$usernameGuess = dirname($usernameGuess);
-$usernameGuess = basename($usernameGuess);
+if ($usernameGuess) {
+    $usernameGuess = dirname($usernameGuess);
+    $usernameGuess = basename($usernameGuess);
+}
 $authorUsername = ask('Author username', $usernameGuess);
 
 $vendorName = ask('Vendor name', $authorUsername);
@@ -83,9 +85,6 @@ if ($formsOnly) {
     ]);
 } else {
     if ($isTheme) {
-        copy(__DIR__.'/configure-stubs/theme/package.json', __DIR__.'/package.json');
-        copy(__DIR__.'/configure-stubs/theme/plugin.css', __DIR__.'/resources/css/plugin.css');
-        copy(__DIR__.'/configure-stubs/theme/tailwind.config.js', __DIR__.'/tailwind.config.js');
         safeUnlink(__DIR__.'/src/SkeletonServiceProvider.php');
         safeUnlink(__DIR__.'/src/Skeleton.php');
         removeDirectory(__DIR__.'/config');
@@ -99,15 +98,22 @@ if ($formsOnly) {
         removeDirectory(__DIR__.'/src/Testing');
     } else {
         safeUnlink(__DIR__.'/src/SkeletonTheme.php');
-        copy(__DIR__.'/configure-stubs/package/package.json', __DIR__.'/package.json');
-        copy(__DIR__.'/configure-stubs/package/plugin.css', __DIR__.'/resources/css/plugin.css');
-        copy(__DIR__.'/configure-stubs/package/tailwind.config.js', __DIR__.'/tailwind.config.js');
     }
 
     remove_composer_filament_deps([
         'filament/forms',
         'filament/tables',
     ]);
+}
+
+if ($isTheme) {
+    copy(__DIR__.'/configure-stubs/theme/package.json', __DIR__.'/package.json');
+    copy(__DIR__.'/configure-stubs/theme/plugin.css', __DIR__.'/resources/css/plugin.css');
+    copy(__DIR__.'/configure-stubs/theme/tailwind.config.js', __DIR__.'/tailwind.config.js');
+} else {
+    copy(__DIR__.'/configure-stubs/admin/package.json', __DIR__.'/package.json');
+    copy(__DIR__.'/configure-stubs/admin/plugin.css', __DIR__.'/resources/css/plugin.css');
+    copy(__DIR__.'/configure-stubs/admin/tailwind.config.js', __DIR__.'/tailwind.config.js');
 }
 
 $files = (str_starts_with(strtoupper(PHP_OS), 'WIN') ? replaceForWindows() : replaceForAllOtherOSes());

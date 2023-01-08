@@ -7,8 +7,8 @@ $authorName = ask('Author name', $gitName);
 $gitEmail = run('git config user.email');
 $authorEmail = ask('Author email', $gitEmail);
 
-$usernameGuess = explode(':', run('git config remote.origin.url'))[1];
-if ($usernameGuess) {
+$usernameGuess = explode(':', run('git config remote.origin.url'))[1] ?? '';
+if ($usernameGuess !== '') {
     $usernameGuess = dirname($usernameGuess);
     $usernameGuess = basename($usernameGuess);
 }

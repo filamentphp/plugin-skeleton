@@ -400,8 +400,6 @@ class ConsoleColor
     }
 
     /**
-     * @param  array  $themes
-     *
      * @throws InvalidStyleException
      * @throws \InvalidArgumentException
      */

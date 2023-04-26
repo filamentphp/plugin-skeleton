@@ -60,25 +60,25 @@ class SkeletonServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-//        Facade Registration
+        //        Facade Registration
         $this->app->bind('skeleton', function (): Skeleton {
             return new Skeleton();
         });
 
-//        Context Registration
+        //        Context Registration
         $this->app->resolving('skeleton', function () {
             foreach ($this->getContexts() as $context) {
                 Filament::registerContext($context);
             }
         });
 
-//        Asset Registration
+        //        Asset Registration
         $this->app->resolving(AssetManager::class, function () {
             FilamentAsset::register($this->getAssets(), $this->getAssetPackage());
             FilamentAsset::registerScriptData($this->getScriptData(), $this->getAssetPackage());
         });
 
-//        Icon Registration
+        //        Icon Registration
         $this->app->resolving(IconManager::class, function () {
             FilamentIcon::register($this->getIcons());
         });
@@ -88,7 +88,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     {
         $this->registerMacros();
 
-//        Handle Stubs
+        //        Handle Stubs
         if ($this->app->runningInConsole()) {
             foreach (app(Filesystem::class)->files(__DIR__.'/../stubs/') as $file) {
                 $this->publishes([
@@ -97,7 +97,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
             }
         }
 
-//        Testing
+        //        Testing
         TestableLivewire::mixin(new TestsSkeleton());
     }
 

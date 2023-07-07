@@ -32,7 +32,7 @@ $description = ask('Package description');
 $usePhpStan = confirm('Enable PhpStan?', true);
 $usePint = confirm('Enable Pint?', true);
 $useDependabot = confirm('Enable Dependabot?', true);
-$useLaravelRay = confirm('Use Ray for debugging?', true);
+$useLaravelRay = confirm('Enable Ray?', true);
 $useUpdateChangelogWorkflow = confirm('Use automatic changelog updater workflow?', true);
 
 $isTheme = confirm('Is this a custom theme?');
@@ -51,7 +51,7 @@ writeln("\e[1;37mPackages & Utilities\e[0m");
 writeln('Larastan/PhpStan  : '.($usePhpStan ? "\e[0;32mYes" : "\e[0;31mNo")."\e[0m");
 writeln('Pint              : '.($usePint ? "\e[0;32mYes" : "\e[0;31mNo")."\e[0m");
 writeln('Use Dependabot    : '.($useDependabot ? "\e[0;32mYes" : "\e[0;31mNo")."\e[0m");
-writeln('Use Ray App       : '.($useLaravelRay ? "\e[0;32mYes" : "\e[0;31mNo")."\e[0m");
+writeln('Use Ray           : '.($useLaravelRay ? "\e[0;32mYes" : "\e[0;31mNo")."\e[0m");
 writeln('Auto-Changelog    : '.($useUpdateChangelogWorkflow ? "\e[0;32mYes" : "\e[0;31mNo")."\e[0m");
 if ($formsOnly) {
     writeln("Filament/Forms    : \e[0;32mYes\e[0m");
@@ -71,6 +71,7 @@ if (! confirm('Modify files?', true)) {
 
 if ($formsOnly) {
     safeUnlink(__DIR__.'/src/SkeletonTheme.php');
+    safeUnlink(__DIR__.'/src/SkeletonPlugin.php');
 
     remove_composer_filament_deps([
         'filament/filament',
@@ -78,6 +79,7 @@ if ($formsOnly) {
     ]);
 } elseif ($tablesOnly) {
     safeUnlink(__DIR__.'/src/SkeletonTheme.php');
+    safeUnlink(__DIR__.'/src/SkeletonPlugin.php');
 
     remove_composer_filament_deps([
         'filament/filament',
@@ -86,6 +88,7 @@ if ($formsOnly) {
 } else {
     if ($isTheme) {
         safeUnlink(__DIR__.'/src/SkeletonServiceProvider.php');
+        safeUnlink(__DIR__.'/src/SkeletonPlugin.php');
         safeUnlink(__DIR__.'/src/Skeleton.php');
         removeDirectory(__DIR__.'/config');
         removeDirectory(__DIR__.'/database');
@@ -104,16 +107,6 @@ if ($formsOnly) {
         'filament/forms',
         'filament/tables',
     ]);
-}
-
-if ($isTheme) {
-    copy(__DIR__.'/configure-stubs/theme/package.json', __DIR__.'/package.json');
-    copy(__DIR__.'/configure-stubs/theme/plugin.css', __DIR__.'/resources/css/plugin.css');
-    copy(__DIR__.'/configure-stubs/theme/tailwind.config.js', __DIR__.'/tailwind.config.js');
-} else {
-    copy(__DIR__.'/configure-stubs/package/package.json', __DIR__.'/package.json');
-    copy(__DIR__.'/configure-stubs/package/plugin.css', __DIR__.'/resources/css/plugin.css');
-    copy(__DIR__.'/configure-stubs/package/tailwind.config.js', __DIR__.'/tailwind.config.js');
 }
 
 $files = (str_starts_with(strtoupper(PHP_OS), 'WIN') ? replaceForWindows() : replaceForAllOtherOSes());
@@ -138,6 +131,7 @@ foreach ($files as $file) {
         str_contains($file, determineSeparator('src/Skeleton.php')) => rename($file, determineSeparator('./src/'.$className.'.php')),
         str_contains($file, determineSeparator('src/SkeletonServiceProvider.php')) => rename($file, determineSeparator('./src/'.$className.'ServiceProvider.php')),
         str_contains($file, determineSeparator('src/SkeletonTheme.php')) => rename($file, determineSeparator('./src/'.$className.'Theme.php')),
+        str_contains($file, determineSeparator('src/SkeletonPlugin.php')) => rename($file, determineSeparator('./src/'.$className.'Plugin.php')),
         str_contains($file, determineSeparator('src/Facades/Skeleton.php')) => rename($file, determineSeparator('./src/Facades/'.$className.'.php')),
         str_contains($file, determineSeparator('src/Commands/SkeletonCommand.php')) => rename($file, determineSeparator('./src/Commands/'.$className.'Command.php')),
         str_contains($file, determineSeparator('src/Testing/TestsSkeleton.php')) => rename($file, determineSeparator('./src/Testing/Tests'.$className.'.php')),
@@ -177,6 +171,7 @@ if (! $usePhpStan) {
 
 if (! $usePint) {
     safeUnlink(__DIR__.'/.github/workflows/fix-php-code-style-issues.yml');
+    safeUnlink(__DIR__.'/pint.json');
 
     remove_composer_deps([
         'laravel/pint',
@@ -192,7 +187,6 @@ if (! $useUpdateChangelogWorkflow) {
 confirm('Execute `composer install` and run tests?') && run('composer install && composer test');
 
 if (confirm('Let this script delete itself?', true)) {
-    removeDirectory(__DIR__.'/configure-stubs');
     unlink(__FILE__);
 }
 

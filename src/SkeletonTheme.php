@@ -2,7 +2,7 @@
 
 namespace VendorName;
 
-use Filament\Context;
+use Filament\Panel;
 use Filament\Contracts\Plugin;
 use Filament\Support\Assets\Theme;
 use Filament\Support\Color;
@@ -15,26 +15,24 @@ class Skeleton implements Plugin
         return 'skeleton-theme';
     }
 
-    public function register(Context $context): void
+    public function register(Panel $panel): void
     {
         FilamentAsset::register([
             Theme::make('skeleton', __DIR__.'/../resources/dist/skeleton.css'),
         ]);
 
-        $context
+        $panel
             ->font('DM Sans')
             ->primaryColor(Color::Amber)
             ->secondaryColor(Color::Gray)
             ->warningColor(Color::Amber)
             ->dangerColor(Color::Rose)
             ->successColor(Color::Green)
-            ->grayColor(Color::Slate)
-            ->sidebarWidth('20rem')
-            ->collapsedSidebarWidth('5.4rem')
+            ->grayColor(Color::Gray)
             ->theme('skeleton');
     }
 
-    public function boot(Context $context): void
+    public function boot(Panel $panel): void
     {
         //
     }

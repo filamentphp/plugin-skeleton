@@ -2,7 +2,7 @@
 
 namespace VendorName\Skeleton;
 
-use Filament\Context;
+use Filament\Panel;
 use Filament\Facades\Filament;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
@@ -58,52 +58,50 @@ class SkeletonServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void
+    public function register(): void
     {
-        //        Facade Registration
-        $this->app->bind('skeleton', function (): Skeleton {
+        parent::register();
+
+        // Facade Registration
+        app()->bind('skeleton', function (): Skeleton {
             return new Skeleton();
-        });
-
-        //        Context Registration
-        $this->app->resolving('skeleton', function () {
-            foreach ($this->getContexts() as $context) {
-                Filament::registerContext($context);
-            }
-        });
-
-        //        Asset Registration
-        $this->app->resolving(AssetManager::class, function () {
-            FilamentAsset::register($this->getAssets(), $this->getAssetPackage());
-            FilamentAsset::registerScriptData($this->getScriptData(), $this->getAssetPackage());
-        });
-
-        //        Icon Registration
-        $this->app->resolving(IconManager::class, function () {
-            FilamentIcon::register($this->getIcons());
         });
     }
 
-    public function packageBooted(): void
+    public function boot(): void
     {
-        $this->registerMacros();
+        parent::boot();
 
-        //        Handle Stubs
-        if ($this->app->runningInConsole()) {
+        // Asset Registration
+        FilamentAsset::register(
+            $this->getAssets(),
+            $this->getAssetPackage()
+        );
+
+        FilamentAsset::registerScriptData(
+            $this->getScriptData(),
+            $this->getAssetPackage()
+        );
+
+        // Icon Registration
+        FilamentIcon::register($this->getIcons());
+
+        // Handle Stubs
+        if (app()->runningInConsole()) {
             foreach (app(Filesystem::class)->files(__DIR__.'/../stubs/') as $file) {
                 $this->publishes([
                     $file->getRealPath() => base_path("stubs/skeleton/{$file->getFilename()}"),
-                ], 'forms-stubs');
+                ], 'skeleton-stubs');
             }
         }
 
-        //        Testing
+        // Testing
         TestableLivewire::mixin(new TestsSkeleton());
     }
 
     protected function getAssetPackage(): ?string
     {
-        return static::$name ?? null;
+        return ':vendor_slug/:package_slug';
     }
 
     /**
@@ -112,7 +110,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-            //  AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
+            // AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
             Css::make('skeleton-styles', __DIR__.'/../resources/dist/skeleton.js'),
             Js::make('skeleton-scripts', __DIR__.'/../resources/dist/skeleton.js'),
         ];
@@ -126,14 +124,6 @@ class SkeletonServiceProvider extends PackageServiceProvider
         return [
             SkeletonCommand::class,
         ];
-    }
-
-    /**
-     * @return array<Context>
-     */
-    protected function getContexts(): array
-    {
-        return [];
     }
 
     /**
@@ -168,9 +158,5 @@ class SkeletonServiceProvider extends PackageServiceProvider
         return [
             'create_skeleton_table',
         ];
-    }
-
-    protected function registerMacros(): void
-    {
     }
 }

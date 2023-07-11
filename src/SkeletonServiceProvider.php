@@ -25,6 +25,11 @@ class SkeletonServiceProvider extends PackageServiceProvider
 
     public function configurePackage(Package $package): void
     {
+        /*
+         * This class is a Package Service Provider
+         *
+         * More info: https://github.com/spatie/laravel-package-tools
+         */
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
             ->hasInstallCommand(function (InstallCommand $command) {
@@ -52,16 +57,6 @@ class SkeletonServiceProvider extends PackageServiceProvider
         if (file_exists($this->package->basePath('/../resources/views'))) {
             $package->hasViews(static::$viewNamespace);
         }
-    }
-
-    public function register(): void
-    {
-        parent::register();
-
-        // Facade Registration
-        app()->bind('skeleton', function (): Skeleton {
-            return new Skeleton();
-        });
     }
 
     public function boot(): void

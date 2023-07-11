@@ -163,10 +163,7 @@ if (! $usePhpStan) {
         'nunomaduro/larastan',
     ]);
 
-    remove_composer_script([
-        'test:phpstan',
-        '@test:phpstan',
-    ]);
+    remove_composer_script(['analyse']);
 }
 
 if (! $usePint) {
@@ -177,7 +174,7 @@ if (! $usePint) {
         'laravel/pint',
     ]);
 
-    remove_composer_script(['pint']);
+    remove_composer_script(['format']);
 }
 
 if (! $useUpdateChangelogWorkflow) {

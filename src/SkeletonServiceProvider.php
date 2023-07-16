@@ -102,7 +102,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     {
         return [
             // AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
-            Css::make('skeleton-styles', __DIR__ . '/../resources/dist/skeleton.js'),
+            Css::make('skeleton-styles', __DIR__ . '/../resources/dist/skeleton.css'),
             Js::make('skeleton-scripts', __DIR__ . '/../resources/dist/skeleton.js'),
         ];
     }

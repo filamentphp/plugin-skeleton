@@ -1,8 +1,11 @@
-name: Update Changelog
+name: "Update Changelog"
 
 on:
   release:
     types: [released]
+
+permissions:
+  contents: write
 
 jobs:
   update:

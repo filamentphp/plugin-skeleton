@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName;
+namespace VendorName\Skeleton;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;

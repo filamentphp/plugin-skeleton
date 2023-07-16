@@ -42,19 +42,19 @@ class SkeletonServiceProvider extends PackageServiceProvider
 
         $configFileName = $package->shortName();
 
-        if (file_exists($this->package->basePath("/../config/{$configFileName}.php"))) {
+        if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
             $package->hasConfigFile();
         }
 
-        if (file_exists($this->package->basePath('/../database/migrations'))) {
+        if (file_exists($package->basePath('/../database/migrations'))) {
             $package->hasMigrations($this->getMigrations());
         }
 
-        if (file_exists($this->package->basePath('/../resources/lang'))) {
+        if (file_exists($package->basePath('/../resources/lang'))) {
             $package->hasTranslations();
         }
 
-        if (file_exists($this->package->basePath('/../resources/views'))) {
+        if (file_exists($package->basePath('/../resources/views'))) {
             $package->hasViews(static::$viewNamespace);
         }
     }

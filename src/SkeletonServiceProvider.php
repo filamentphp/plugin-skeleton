@@ -59,19 +59,21 @@ class SkeletonServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function boot(): void
+    public function packageRegistered(): void
     {
-        parent::boot();
+    }
 
+    public function packageBooted(): void
+    {
         // Asset Registration
         FilamentAsset::register(
             $this->getAssets(),
-            $this->getAssetPackage()
+            $this->getAssetPackageName()
         );
 
         FilamentAsset::registerScriptData(
             $this->getScriptData(),
-            $this->getAssetPackage()
+            $this->getAssetPackageName()
         );
 
         // Icon Registration
@@ -90,7 +92,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
         TestableLivewire::mixin(new TestsSkeleton());
     }
 
-    protected function getAssetPackage(): ?string
+    protected function getAssetPackageName(): ?string
     {
         return ':vendor_slug/:package_slug';
     }

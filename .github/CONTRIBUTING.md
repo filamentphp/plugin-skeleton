@@ -14,7 +14,7 @@ Please be considerate towards maintainers when raising issues or presenting pull
 world that developers are civilized and selfless people.
 
 It's the duty of the maintainer to ensure that all submissions to the project are of sufficient
-quality to benefit the project. Many developers have different skillsets, strengths, and weaknesses. Respect the maintainer's decision, and do not be upset or abusive if your submission is not used.
+quality to benefit the project. Many developers have different skills, strengths, and weaknesses. Respect the maintainer's decision, and do not be upset or abusive if your submission is not used.
 
 ## Viability
 

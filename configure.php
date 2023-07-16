@@ -16,18 +16,20 @@ $authorUsername = ask('Author username', $usernameGuess);
 
 $vendorName = ask('Vendor name', $authorUsername);
 $vendorSlug = slugify($vendorName);
-$vendorNamespace = ucwords($vendorName);
+$vendorNamespace = str_replace('-', '', ucwords($vendorName));
 $vendorNamespace = ask('Vendor namespace', $vendorNamespace);
 
-$folderName = basename(getcwd());
+$currentDirectory = getcwd();
+$folderName = basename($currentDirectory);
 
 $packageName = ask('Package name', $folderName);
 $packageSlug = slugify($packageName);
-$packageSlugWithoutPrefix = remove_prefix('filament-', $packageSlug);
+$packageSlugWithoutPrefix = removePrefix('filament-', $packageSlug);
 
-$className = title_case($packageName);
+$className = titleCase($packageName);
 $className = ask('Class name', $className);
-$description = ask('Package description');
+$variableName = lcfirst($className);
+$description = ask('Package description', "This is my package $packageSlug");
 
 $usePhpStan = confirm('Enable PhpStan?', true);
 $usePint = confirm('Enable Pint?', true);
@@ -41,11 +43,11 @@ $tablesOnly = ! ($isTheme || $formsOnly) && confirm('Is this for Tables only?');
 
 writeln("\r");
 writeln('------');
-writeln("Author     : \e[0;36m{$authorName} ({$authorUsername}, {$authorEmail})\e[0m");
-writeln("Vendor     : \e[0;36m{$vendorName} ({$vendorSlug})\e[0m");
+writeln("Author     : \e[0;36m$authorName ($authorUsername, $authorEmail)\e[0m");
+writeln("Vendor     : \e[0;36m$vendorName ($vendorSlug)\e[0m");
 writeln('Package    : ' . "\e[0;36m" . $packageSlug . ($description ? ' <{$description}>' : '') . "\e[0m");
-writeln("Namespace  : \e[0;36m{$vendorNamespace}\\{$className}\e[0m");
-writeln("Class name : \e[0;36m{$className}\e[0m");
+writeln("Namespace  : \e[0;36m$vendorNamespace\\$className\e[0m");
+writeln("Class name : \e[0;36m$className\e[0m");
 writeln('---');
 writeln("\e[1;37mPackages & Utilities\e[0m");
 writeln('Larastan/PhpStan  : ' . ($usePhpStan ? "\e[0;32mYes" : "\e[0;31mNo") . "\e[0m");
@@ -72,19 +74,21 @@ if (! confirm('Modify files?', true)) {
 if ($formsOnly) {
     safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
     safeUnlink(__DIR__ . '/src/SkeletonPlugin.php');
+    safeUnlink(__DIR__ . '/package-theme.json');
 
-    remove_composer_filament_deps([
+    removeComposerDeps([
         'filament/filament',
         'filament/tables',
-    ]);
+    ], 'require');
 } elseif ($tablesOnly) {
     safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
     safeUnlink(__DIR__ . '/src/SkeletonPlugin.php');
+    safeUnlink(__DIR__ . '/package-theme.json');
 
-    remove_composer_filament_deps([
+    removeComposerDeps([
         'filament/filament',
         'filament/forms',
-    ]);
+    ], 'require');
 } else {
     if ($isTheme) {
         safeUnlink(__DIR__ . '/src/SkeletonServiceProvider.php');
@@ -103,16 +107,16 @@ if ($formsOnly) {
         safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
     }
 
-    remove_composer_filament_deps([
+    removeComposerDeps([
         'filament/forms',
         'filament/tables',
-    ]);
+    ], 'require');
 }
 
 $files = (str_starts_with(strtoupper(PHP_OS), 'WIN') ? replaceForWindows() : replaceForAllOtherOSes());
 
 foreach ($files as $file) {
-    replace_in_file($file, [
+    replaceInFile($file, [
         ':author_name' => $authorName,
         ':author_username' => $authorUsername,
         'author@domain.com' => $authorEmail,
@@ -124,6 +128,8 @@ foreach ($files as $file) {
         ':package_slug_without_prefix' => $packageSlugWithoutPrefix,
         'Skeleton' => $className,
         'skeleton' => $packageSlug,
+        'migration_table_name' => titleSnake($packageSlug),
+        'variable' => $variableName,
         ':package_description' => $description,
     ]);
 
@@ -135,9 +141,10 @@ foreach ($files as $file) {
         str_contains($file, determineSeparator('src/Facades/Skeleton.php')) => rename($file, determineSeparator('./src/Facades/' . $className . '.php')),
         str_contains($file, determineSeparator('src/Commands/SkeletonCommand.php')) => rename($file, determineSeparator('./src/Commands/' . $className . 'Command.php')),
         str_contains($file, determineSeparator('src/Testing/TestsSkeleton.php')) => rename($file, determineSeparator('./src/Testing/Tests' . $className . '.php')),
-        str_contains($file, determineSeparator('database/migrations/create_skeleton_table.php.stub')) => rename($file, determineSeparator('./database/migrations/create_' . $packageSlugWithoutPrefix . '_table.php.stub')),
+        str_contains($file, determineSeparator('database/migrations/create_skeleton_table.php.stub')) => rename
+        ($file, determineSeparator('./database/migrations/create_' . titleSnake($packageSlugWithoutPrefix) . '_table.php.stub')),
         str_contains($file, determineSeparator('config/skeleton.php')) => rename($file, determineSeparator('./config/' . $packageSlugWithoutPrefix . '.php')),
-        str_contains($file, 'README.md') => remove_tag($file, 'delete'),
+        str_contains($file, 'README.md') => removeTag($file, 'delete'),
         default => [],
     };
 }
@@ -148,7 +155,7 @@ if (! $useDependabot) {
 }
 
 if (! $useLaravelRay) {
-    remove_composer_deps(['spatie/laravel-ray']);
+    removeComposerDeps(['spatie/laravel-ray'], 'require-dev');
 }
 
 if (! $usePhpStan) {
@@ -156,32 +163,32 @@ if (! $usePhpStan) {
     safeUnlink(__DIR__ . '/phpstan-baseline.neon');
     safeUnlink(__DIR__ . '/.github/workflows/phpstan.yml');
 
-    remove_composer_deps([
+    removeComposerDeps([
         'phpstan/extension-installer',
         'phpstan/phpstan-deprecation-rules',
         'phpstan/phpstan-phpunit',
         'nunomaduro/larastan',
-    ]);
+    ], 'require-dev');
 
-    remove_composer_script(['analyse']);
+    removeComposerDeps(['analyse'], 'scripts');
 }
 
 if (! $usePint) {
     safeUnlink(__DIR__ . '/.github/workflows/fix-php-code-style-issues.yml');
     safeUnlink(__DIR__ . '/pint.json');
 
-    remove_composer_deps([
+    removeComposerDeps([
         'laravel/pint',
-    ]);
+    ], 'require-dev');
 
-    remove_composer_script(['format']);
+    removeComposerDeps(['format'], 'scripts');
 }
 
 if (! $useUpdateChangelogWorkflow) {
     safeUnlink(__DIR__ . '/.github/workflows/update-changelog.yml');
 }
 
-confirm('Execute `composer install` and run tests?') && run('composer install && composer test');
+confirm('Execute `composer install`?') && run('composer install');
 
 if (confirm('Let this script delete itself?', true)) {
     unlink(__FILE__);
@@ -189,7 +196,7 @@ if (confirm('Let this script delete itself?', true)) {
 
 function ask(string $question, string $default = ''): string
 {
-    $def = $default ? "\e[0;33m ({$default})" : '';
+    $def = $default ? "\e[0;33m ($default)" : '';
     $answer = readline("\e[0;32m" . $question . $def . ": \e[0m");
 
     if (! $answer) {
@@ -217,7 +224,7 @@ function writeln(string $line): void
 
 function run(string $command): string
 {
-    return trim(shell_exec($command));
+    return trim((string) shell_exec($command));
 }
 
 function slugify(string $subject): string
@@ -225,12 +232,17 @@ function slugify(string $subject): string
     return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $subject), '-'));
 }
 
-function title_case(string $subject): string
+function titleCase(string $subject): string
 {
     return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $subject)));
 }
 
-function replace_in_file(string $file, array $replacements): void
+function titleSnake(string $subject, string $replace = '_'): string
+{
+    return str_replace(['-', '_'], $replace, $subject);
+}
+
+function replaceInFile(string $file, array $replacements): void
 {
     $contents = file_get_contents($file);
 
@@ -244,7 +256,7 @@ function replace_in_file(string $file, array $replacements): void
     );
 }
 
-function remove_prefix(string $prefix, string $content): string
+function removePrefix(string $prefix, string $content): string
 {
     if (str_starts_with($content, $prefix)) {
         return substr($content, strlen($prefix));
@@ -253,96 +265,20 @@ function remove_prefix(string $prefix, string $content): string
     return $content;
 }
 
-function remove_composer_deps(array $names): void
+function removeComposerDeps(array $names, string $location): void
 {
     $data = json_decode(file_get_contents(__DIR__ . '/composer.json'), true);
 
-    foreach ($data['require-dev'] as $name => $version) {
+    foreach ($data[$location] as $name => $version) {
         if (in_array($name, $names, true)) {
-            unset($data['require-dev'][$name]);
+            unset($data[$location][$name]);
         }
     }
 
     file_put_contents(__DIR__ . '/composer.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
-function remove_composer_filament_deps(array $names): void
-{
-    $data = json_decode(file_get_contents(__DIR__ . '/composer.json'), true);
-
-    foreach ($data['require'] as $name => $version) {
-        if (in_array($name, $names, true)) {
-            unset($data['require'][$name]);
-        }
-    }
-
-    file_put_contents(__DIR__ . '/composer.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-}
-
-function remove_composer_script(array $scriptNames): void
-{
-    $data = json_decode(file_get_contents(__DIR__ . '/composer.json'), true);
-
-    foreach ($data['scripts'] as $name => $script) {
-        if (is_array($script)) {
-            foreach ($script as $k => $s) {
-                if (in_array($s, $scriptNames)) {
-                    unset($data['scripts'][$name][$k]);
-
-                    break;
-                }
-            }
-        } elseif (in_array($name, $scriptNames)) {
-            unset($data['scripts'][$name]);
-
-            break;
-        }
-    }
-
-    file_put_contents(__DIR__ . '/composer.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-}
-
-function remove_package_script(array $scriptNames): void
-{
-    $data = json_decode(file_get_contents(__DIR__ . '/package.json'), true);
-
-    foreach ($data['scripts'] as $name => $script) {
-        if (is_array($script)) {
-            foreach ($script as $k => $s) {
-                if (in_array($s, $scriptNames)) {
-                    unset($data['scripts'][$name][$k]);
-
-                    break;
-                }
-            }
-        } elseif (in_array($name, $scriptNames)) {
-            unset($data['scripts'][$name]);
-
-            break;
-        }
-    }
-
-    foreach ($data['devDependencies'] as $name => $script) {
-        if (is_array($script)) {
-            foreach ($script as $k => $s) {
-                if (in_array($s, $scriptNames)) {
-                    unset($data['devDependencies'][$name][$k]);
-
-                    break;
-                }
-            }
-        } elseif (in_array($name, $scriptNames)) {
-            unset($data['devDependencies'][$name]);
-
-            break;
-        }
-    }
-
-    file_put_contents(__DIR__ . '/package.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES |
-    JSON_UNESCAPED_UNICODE));
-}
-
-function remove_tag(string $file, string $tag): void
+function removeTag(string $file, string $tag): void
 {
     $contents = file_get_contents($file);
 
@@ -366,12 +302,12 @@ function determineSeparator(string $path): string
 
 function replaceForWindows(): array
 {
-    return preg_split('/\\r\\n|\\r|\\n/', run('dir /S /B * | findstr /v /i .git\ | findstr /v /i vendor | findstr /v /i ' . basename(__FILE__) . ' | findstr /r /i /M /F:/ ":author :vendor :package VendorName skeleton vendor_name vendor_slug author@domain.com"'));
+    return preg_split('/\\r\\n|\\r|\\n/', run('dir /S /B * | findstr /v /i .git\ | findstr /v /i vendor | findstr /v /i '.basename(__FILE__).' | findstr /r /i /M /F:/ ":author :vendor :package VendorName skeleton migration_table_name vendor_name vendor_slug author@domain.com"'));
 }
 
 function replaceForAllOtherOSes(): array
 {
-    return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v ' . basename(__FILE__)));
+    return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|migration_table_name|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v '.basename(__FILE__)));
 }
 
 function removeDirectory($dir): void

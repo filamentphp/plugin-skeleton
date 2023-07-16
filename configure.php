@@ -105,6 +105,7 @@ if ($formsOnly) {
         removeDirectory(__DIR__ . '/src/Testing');
     } else {
         safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
+        safeUnlink(__DIR__ . '/package-theme.json');
     }
 
     removeComposerDeps([
@@ -144,6 +145,9 @@ foreach ($files as $file) {
         str_contains($file, determineSeparator('database/migrations/create_skeleton_table.php.stub')) => rename
         ($file, determineSeparator('./database/migrations/create_' . titleSnake($packageSlugWithoutPrefix) . '_table.php.stub')),
         str_contains($file, determineSeparator('config/skeleton.php')) => rename($file, determineSeparator('./config/' . $packageSlugWithoutPrefix . '.php')),
+        str_contains($file, determineSeparator('resources/css/skeleton.css')) => rename($file, determineSeparator('./resources/css/' . $packageSlugWithoutPrefix . '.css')),
+        str_contains($file, determineSeparator('resources/js/skeleton.js')) => rename($file, determineSeparator('./resources/js/' . $packageSlugWithoutPrefix . '.js')),
+        str_contains($file, determineSeparator('resources/lang/en/skeleton.php')) => rename($file, determineSeparator('./resources/lang/en/' . $packageSlugWithoutPrefix . '.php')),
         str_contains($file, 'README.md') => removeTag($file, 'delete'),
         default => [],
     };

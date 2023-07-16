@@ -74,7 +74,6 @@ if (! confirm('Modify files?', true)) {
 if ($formsOnly) {
     safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
     safeUnlink(__DIR__ . '/src/SkeletonPlugin.php');
-    safeUnlink(__DIR__ . '/package-theme.json');
 
     removeComposerDeps([
         'filament/filament',
@@ -83,7 +82,6 @@ if ($formsOnly) {
 } elseif ($tablesOnly) {
     safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
     safeUnlink(__DIR__ . '/src/SkeletonPlugin.php');
-    safeUnlink(__DIR__ . '/package-theme.json');
 
     removeComposerDeps([
         'filament/filament',
@@ -94,6 +92,7 @@ if ($formsOnly) {
         safeUnlink(__DIR__ . '/src/SkeletonServiceProvider.php');
         safeUnlink(__DIR__ . '/src/SkeletonPlugin.php');
         safeUnlink(__DIR__ . '/src/Skeleton.php');
+        removeDirectory(__DIR__ . '/bin');
         removeDirectory(__DIR__ . '/config');
         removeDirectory(__DIR__ . '/database');
         removeDirectory(__DIR__ . '/stubs');
@@ -103,9 +102,11 @@ if ($formsOnly) {
         removeDirectory(__DIR__ . '/src/Commands');
         removeDirectory(__DIR__ . '/src/Facades');
         removeDirectory(__DIR__ . '/src/Testing');
+
+        setupPackageJsonForTheme();
+
     } else {
         safeUnlink(__DIR__ . '/src/SkeletonTheme.php');
-        safeUnlink(__DIR__ . '/package-theme.json');
     }
 
     removeComposerDeps([
@@ -279,6 +280,20 @@ function removeComposerDeps(array $names, string $location): void
     file_put_contents(__DIR__ . '/composer.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 }
 
+function removeNpmDeps(array $names, string $location): void
+{
+    $data = json_decode(file_get_contents(__DIR__ . '/package.json'), true);
+
+    foreach ($data[$location] as $name => $version) {
+        if (in_array($name, $names, true)) {
+            unset($data[$location][$name]);
+        }
+    }
+
+    file_put_contents(__DIR__ . '/package.json', json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES |
+        JSON_UNESCAPED_UNICODE));
+}
+
 function removeTag(string $file, string $tag): void
 {
     $contents = file_get_contents($file);
@@ -287,6 +302,32 @@ function removeTag(string $file, string $tag): void
         $file,
         preg_replace('/<!--' . $tag . '-->.*<!--\/' . $tag . '-->/s', '', $contents) ?: $contents
     );
+}
+
+function setupPackageJsonForTheme(): void
+{
+    removeNpmDeps([
+        'purge',
+        'dev',
+        'dev:scripts',
+        'build',
+        'build:scripts',
+    ], 'scripts');
+
+    removeNpmDeps([
+        '@awcodes/filament-plugin-purge',
+        'esbuild',
+        'npm-run-all',
+        'prettier',
+        'prettier-plugin-tailwindcss',
+    ], 'devDependencies');
+
+    $newData = json_decode(file_get_contents(__DIR__ . '/package.json'), true);
+
+    replaceInFile($newData, [
+        'dev:styles' => 'dev',
+        'build:styles' => 'build',
+    ]);
 }
 
 function safeUnlink(string $filename): void

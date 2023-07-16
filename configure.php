@@ -322,9 +322,7 @@ function setupPackageJsonForTheme(): void
         'prettier-plugin-tailwindcss',
     ], 'devDependencies');
 
-    $newData = json_decode(file_get_contents(__DIR__ . '/package.json'), true);
-
-    replaceInFile($newData, [
+    replaceInFile(__DIR__ . '/package.json', [
         'dev:styles' => 'dev',
         'build:styles' => 'build',
     ]);

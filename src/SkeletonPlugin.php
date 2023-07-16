@@ -7,11 +7,9 @@ use Filament\Panel;
 
 class SkeletonPlugin implements Plugin
 {
-    protected static string $name = 'skeleton-plugin';
-
     public function getId(): string
     {
-        return static::$name;
+        return 'skeleton';
     }
 
     public function register(Panel $panel): void

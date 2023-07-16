@@ -12,7 +12,7 @@ class Skeleton implements Plugin
 {
     public function getId(): string
     {
-        return 'skeleton-theme';
+        return 'skeleton';
     }
 
     public function register(Panel $panel): void

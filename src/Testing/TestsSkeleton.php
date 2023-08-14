@@ -2,10 +2,10 @@
 
 namespace VendorName\Skeleton\Testing;
 
-use Livewire\Testing\TestableLivewire;
+use Livewire\Features\SupportTesting\Testable;
 
 /**
- * @mixin TestableLivewire
+ * @mixin Testable
  */
 class TestsSkeleton
 {

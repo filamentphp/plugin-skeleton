@@ -45,7 +45,7 @@ writeln("\r");
 writeln('------');
 writeln("Author     : \e[0;36m$authorName ($authorUsername, $authorEmail)\e[0m");
 writeln("Vendor     : \e[0;36m$vendorName ($vendorSlug)\e[0m");
-writeln('Package    : ' . "\e[0;36m" . $packageSlug . ($description ? ' <{$description}>' : '') . "\e[0m");
+writeln('Package    : ' . "\e[0;36m" . $packageSlug . ($description ? " <{$description}>" : '') . "\e[0m");
 writeln("Namespace  : \e[0;36m$vendorNamespace\\$className\e[0m");
 writeln("Class name : \e[0;36m$className\e[0m");
 writeln('---');

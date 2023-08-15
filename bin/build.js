@@ -1,4 +1,4 @@
-import * as esbuild from 'esbuild'
+import esbuild from 'esbuild'
 
 const isDev = process.argv.includes('--dev')
 

@@ -8,7 +8,6 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Support\Icons\Icon;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -120,7 +119,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     }
 
     /**
-     * @return array<string, Icon>
+     * @return array<string>
      */
     protected function getIcons(): array
     {

@@ -347,7 +347,9 @@ function replaceForWindows(): array
 
 function replaceForAllOtherOSes(): array
 {
-    return explode(PHP_EOL, run('grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|migration_table_name|vendor_name|vendor_slug|author@domain.com" --exclude-dir=vendor ./* ./.github/* | grep -v ' . basename(__FILE__)));
+    return explode(PHP_EOL, run('find ./* ./.github/* -name "vendor" -type d -prune \
+     -o -name "configure.php" -prune \
+     -o -type f -print0 | xargs -0 grep -E -r -l -i ":author|:vendor|:package|VendorName|skeleton|migration_table_name|vendor_name|vendor_slug|author@domain.com"'));
 }
 
 function removeDirectory($dir): void

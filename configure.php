@@ -138,7 +138,7 @@ foreach ($files as $file) {
     match (true) {
         str_contains($file, determineSeparator('src/Skeleton.php')) => rename($file, determineSeparator('./src/' . $className . '.php')),
         str_contains($file, determineSeparator('src/SkeletonServiceProvider.php')) => rename($file, determineSeparator('./src/' . $className . 'ServiceProvider.php')),
-        str_contains($file, determineSeparator('src/SkeletonTheme.php')) => rename($file, determineSeparator('./src/' . $className . 'Theme.php')),
+        str_contains($file, determineSeparator('src/SkeletonTheme.php')) => rename($file, determineSeparator('./src/' . $className . (str_ends_with($className, 'Theme') ? '.php' : 'Theme.php'))),
         str_contains($file, determineSeparator('src/SkeletonPlugin.php')) => rename($file, determineSeparator('./src/' . $className . 'Plugin.php')),
         str_contains($file, determineSeparator('src/Facades/Skeleton.php')) => rename($file, determineSeparator('./src/Facades/' . $className . '.php')),
         str_contains($file, determineSeparator('src/Commands/SkeletonCommand.php')) => rename($file, determineSeparator('./src/Commands/' . $className . 'Command.php')),

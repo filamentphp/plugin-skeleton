@@ -7,16 +7,10 @@ use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
-use Filament\Support\Facades\FilamentIcon;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Filesystem\Filesystem;
-use Livewire\Features\SupportTesting\Testable;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Filamentphp\PluginSkeleton\Commands\PluginSkeletonCommand;
-use Filamentphp\PluginSkeleton\Testing\TestsPluginSkeleton;
-use Livewire\Livewire;
 
 class ChartPluginServiceProvider extends PackageServiceProvider
 {
@@ -38,7 +32,7 @@ class ChartPluginServiceProvider extends PackageServiceProvider
         // Asset Registration
         FilamentAsset::register(
             assets: [
-                AlpineComponent::make('chart-plugin', __DIR__ . '/../resources/dist/chart-widget.js')
+                AlpineComponent::make('chart-plugin', __DIR__ . '/../resources/dist/chart-widget.js'),
             ],
             package: 'tsetis/chart-plugin'
         );

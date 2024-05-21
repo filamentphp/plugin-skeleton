@@ -1,29 +1,29 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "tsetis/chart-plugin",
+    "description": "This is my package plugin-skeleton",
     "keywords": [
-        ":vendor_name",
+        "filamentphp",
         "laravel",
-        ":package_slug"
+        "plugin-plugin-skeleton"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/tsetis/chart-plugin",
     "support": {
-        "issues": "https://github.com/:vendor_slug/:package_slug/issues",
-        "source": "https://github.com/:vendor_slug/:package_slug"
+        "issues": "https://github.com/tsetis/chart-plugin",
+        "source": "https://github.com/tsetis/chart-plugin"
     },
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "tsetisStelios",
+            "email": "steliost@o44.gr",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.1",
         "filament/filament": "^3.0",
-        "filament/forms": "^3.0",
-        "filament/tables": "^3.0",
+        "laravel/laravel": "^10.3",
+        "livewire/livewire": "^3.4",
         "spatie/laravel-package-tools": "^1.15.0"
     },
     "require-dev": {
@@ -41,13 +41,12 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Tsetis\\ChartPlugin\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/"
+            "Tsetis\\ChartPlugin\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -67,11 +66,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
-            ],
-            "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
-            }
+                "Tsetis\\ChartPlugin\\ChartPluginServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",

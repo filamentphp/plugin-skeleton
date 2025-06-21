@@ -35,6 +35,7 @@ $usePhpStan = confirm('Enable PhpStan?', true);
 $usePint = confirm('Enable Pint?', true);
 $useDependabot = confirm('Enable Dependabot?', true);
 $useLaravelRay = confirm('Enable Ray?', true);
+$useRector = confirm('Enable Rector?', true);
 $useUpdateChangelogWorkflow = confirm('Use automatic changelog updater workflow?', true);
 
 $isTheme = confirm('Is this a custom theme?');
@@ -54,6 +55,7 @@ writeln('Larastan/PhpStan  : ' . ($usePhpStan ? "\e[0;32mYes" : "\e[0;31mNo") . 
 writeln('Pint              : ' . ($usePint ? "\e[0;32mYes" : "\e[0;31mNo") . "\e[0m");
 writeln('Use Dependabot    : ' . ($useDependabot ? "\e[0;32mYes" : "\e[0;31mNo") . "\e[0m");
 writeln('Use Ray           : ' . ($useLaravelRay ? "\e[0;32mYes" : "\e[0;31mNo") . "\e[0m");
+writeln('Use Rector        : ' . ($useRector ? "\e[0;32mYes" : "\e[0;31mNo") . "\e[0m");
 writeln('Auto-Changelog    : ' . ($useUpdateChangelogWorkflow ? "\e[0;32mYes" : "\e[0;31mNo") . "\e[0m");
 if ($formsOnly) {
     writeln("Filament/Forms    : \e[0;32mYes\e[0m");
@@ -169,7 +171,7 @@ if (! $usePhpStan) {
         'phpstan/extension-installer',
         'phpstan/phpstan-deprecation-rules',
         'phpstan/phpstan-phpunit',
-        'nunomaduro/larastan',
+        'larastan/larastan',
     ], 'require-dev');
 
     removeComposerDeps(['analyse'], 'scripts');
@@ -186,8 +188,19 @@ if (! $usePint) {
     removeComposerDeps(['format'], 'scripts');
 }
 
+if (! $useRector) {
+    safeUnlink(__DIR__ . '/rector.php');
+
+    removeComposerDeps([
+        'rector/rector',
+    ], 'require-dev');
+
+    removeComposerDeps(['refactor', 'test:refactor', ], 'scripts');
+}
+
 if (! $useUpdateChangelogWorkflow) {
     safeUnlink(__DIR__ . '/.github/workflows/update-changelog.yml');
+    safeUnlink(__DIR__ . '/CHANGELOG.md');
 }
 
 confirm('Execute `composer install`?') && run('composer install');

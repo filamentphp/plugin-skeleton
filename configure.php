@@ -195,7 +195,7 @@ if (! $useRector) {
         'rector/rector',
     ], 'require-dev');
 
-    removeComposerDeps(['refactor', 'test:refactor', ], 'scripts');
+    removeComposerDeps(['refactor', 'test:refactor'], 'scripts');
 }
 
 if (! $useUpdateChangelogWorkflow) {

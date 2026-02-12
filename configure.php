@@ -168,9 +168,6 @@ if (! $usePhpStan) {
     safeUnlink(__DIR__ . '/.github/workflows/phpstan.yml');
 
     removeComposerDeps([
-        'phpstan/extension-installer',
-        'phpstan/phpstan-deprecation-rules',
-        'phpstan/phpstan-phpunit',
         'larastan/larastan',
     ], 'require-dev');
 

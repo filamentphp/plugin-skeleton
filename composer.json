@@ -5,6 +5,8 @@
         ":vendor_name",
         "laravel",
         "filamentphp",
+        "filament",
+        "filament-plugin",
         ":package_slug"
     ],
     "homepage": "https://github.com/:vendor_slug/:package_slug",
@@ -22,9 +24,9 @@
     ],
     "require": {
         "php": "^8.2",
-        "filament/filament": "^4.0",
-        "filament/forms": "^4.0",
-        "filament/tables": "^4.0",
+        "filament/filament": "^5.0",
+        "filament/forms": "^5.0",
+        "filament/tables": "^5.0",
         "spatie/laravel-package-tools": "^1.15.0"
     },
     "require-dev": {
@@ -32,10 +34,10 @@
         "laravel/pint": "^1.0",
         "nunomaduro/collision": "^8.0",
         "orchestra/testbench": "^9.0|^10.0",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-arch": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0",
-        "pestphp/pest-plugin-livewire": "^3.0",
+        "pestphp/pest": "^3.7|^4.0",
+        "pestphp/pest-plugin-arch": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+        "pestphp/pest-plugin-livewire": "^3.0|^4.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",

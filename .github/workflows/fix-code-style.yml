@@ -14,8 +14,9 @@ jobs:
     steps:
       # persist-credentials: true is required so `git-auto-commit-action` below
       # can push the reformatted files back to the branch.
+      # zizmor: ignore[artipacked]
       - name: Checkout code
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6.0.3 # zizmor: ignore[artipacked]
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Cache Composer dependencies
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5

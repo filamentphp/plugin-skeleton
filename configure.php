@@ -352,7 +352,39 @@ function determineSeparator(string $path): string
 
 function replaceForWindows(): array
 {
-    return preg_split('/\\r\\n|\\r|\\n/', run('dir /S /B * | findstr /v /i .git\ | findstr /v /i \\vendor\\ | findstr /v /i ' . basename(__FILE__) . ' | findstr /r /i /M /F:/ ":author :vendor :package VendorName skeleton migration_table_name vendor_name vendor_slug author@domain.com"'));
+    $patterns = [':author', ':vendor', ':package', 'VendorName', 'skeleton', 'migration_table_name', 'vendor_name', 'vendor_slug', 'author@domain.com'];
+    $files = [];
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__, RecursiveDirectoryIterator::SKIP_DOTS));
+
+    foreach ($iterator as $file) {
+        $path = $file->getPathname();
+        $relative = str_replace(__DIR__ . DIRECTORY_SEPARATOR, '', $path);
+
+        if ($file->isDir()) {
+            continue;
+        }
+
+        $basename = $file->getBasename();
+
+        if ($basename === basename(__FILE__)) {
+            continue;
+        }
+
+        $parts = explode(DIRECTORY_SEPARATOR, $relative);
+        if (in_array('vendor', $parts, true) || in_array('.git', $parts, true)) {
+            continue;
+        }
+
+        $contents = file_get_contents($path);
+        foreach ($patterns as $pattern) {
+            if (str_contains($contents, $pattern)) {
+                $files[] = $path;
+                break;
+            }
+        }
+    }
+
+    return $files;
 }
 
 function replaceForAllOtherOSes(): array

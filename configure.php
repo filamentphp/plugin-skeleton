@@ -211,8 +211,15 @@ if (confirm('Let this script delete itself?', true)) {
 
 function ask(string $question, string $default = ''): string
 {
-    $def = $default ? "\e[0;33m ($default)" : '';
-    $answer = readline("\e[0;32m" . $question . $def . ": \e[0m");
+    fwrite(STDOUT, "\e[0;32m{$question}");
+
+    if ($default !== '') {
+        fwrite(STDOUT, "\e[0;33m ({$default})");
+    }
+
+    fwrite(STDOUT, "\e[0m: ");
+
+    $answer = readline();
 
     if (! $answer) {
         return $default;
